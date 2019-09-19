@@ -12,6 +12,7 @@ using java.text;
 using Stratumn.CanonicalJson.Helpers;
 using Stratumn.CanonicalJson.helpers;
 using Newtonsoft.Json;
+using java.util;
 
 namespace Stratumn.CanonicalJson
 {
@@ -149,7 +150,10 @@ namespace Stratumn.CanonicalJson
             }
             catch (java.lang.ArithmeticException)
             {
-                NumberFormat formatter = new DecimalFormat("0.0E0");
+                NumberFormat f = NumberFormat.getInstance(Locale.ENGLISH);
+                DecimalFormat formatter = (DecimalFormat)f;
+
+                formatter.applyPattern("0.0E0");
                 formatter.setMinimumFractionDigits(1);
                 formatter.setMaximumFractionDigits(bd.precision());
                 string val = formatter.format(bd).Replace("+", "");
