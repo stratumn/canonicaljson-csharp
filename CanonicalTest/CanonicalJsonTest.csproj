@@ -1,196 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CCE48034-B90A-42AF-9118-68D503DFDEFF}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Stratumn.CanonicalJsonTest</RootNamespace>
-    <AssemblyName>Stratumn.CanonicalJsonTest</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>Stratumn.CanonicalJsonTest.Program</StartupObject>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
+    <PackageReference Include="dmath.core" Version="1.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="TransformerTest.cs" />
-    <Compile Include="ParserTest.cs" />
-    <Compile Include="CanonicalJsonTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\CanonicalJson\CanonicalJson.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Resources\test\malformed\empty\input.json" />
-    <None Include="Resources\test\malformed\hex_number\input.json" />
-    <None Include="Resources\test\malformed\invalid_string_character\input.json" />
-    <None Include="Resources\test\malformed\invalid_string_escape\input.json" />
-    <None Include="Resources\test\malformed\invalid_string_unicode_escape\input.json" />
-    <None Include="Resources\test\malformed\leading_plus_number\input.json" />
-    <None Include="Resources\test\malformed\leading_zero_number\input.json" />
-    <None Include="Resources\test\malformed\missing_array_element\input.json" />
-    <None Include="Resources\test\malformed\missing_integer_number\input.json" />
-    <None Include="Resources\test\malformed\missing_object_colon\input.json" />
-    <None Include="Resources\test\malformed\missing_object_element\input.json" />
-    <None Include="Resources\test\malformed\partial_fraction_number\input.json" />
-    <None Include="Resources\test\malformed\unclosed_array\input.json" />
-    <None Include="Resources\test\malformed\unclosed_object\input.json" />
-    <None Include="Resources\test\malformed\unclosed_string\input.json" />
-    <None Include="Resources\test\malformed\unopened_array\input.json" />
-    <None Include="Resources\test\malformed\unopened_object\input.json" />
-    <None Include="Resources\test\malformed\unopened_string\input.json" />
-    <None Include="Resources\test\tokens\3.object-ordering\expected.json" />
-    <None Include="Resources\test\tokens\3.object-ordering\input.json" />
-    <None Include="Resources\test\tokens\3.object-ordering\output.json" />
-    <None Include="Resources\test\tokens\4.integer\1.no-negative-zero\expected.json" />
-    <None Include="Resources\test\tokens\4.integer\1.no-negative-zero\input.json" />
-    <None Include="Resources\test\tokens\4.integer\1.no-negative-zero\output.json" />
-    <None Include="Resources\test\tokens\4.integer\2.no-decimal-point\expected.json" />
-    <None Include="Resources\test\tokens\4.integer\2.no-decimal-point\input.json" />
-    <None Include="Resources\test\tokens\4.integer\2.no-decimal-point\output.json" />
-    <None Include="Resources\test\tokens\4.integer\3.no-exponent\expected.json" />
-    <None Include="Resources\test\tokens\4.integer\3.no-exponent\input.json" />
-    <None Include="Resources\test\tokens\4.integer\3.no-exponent\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\1.single-digit-nonzero-significand-integer\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\1.single-digit-nonzero-significand-integer\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\1.single-digit-nonzero-significand-integer\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\2.nonempty-significand-fraction\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\2.nonempty-significand-fraction\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\2.nonempty-significand-fraction\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\3.no-significand-fraction-trailing-zeroes\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\3.no-significand-fraction-trailing-zeroes\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\3.no-significand-fraction-trailing-zeroes\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\4.capital-E\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\4.capital-E\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\4.capital-E\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\5.no-exponent-plus\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\5.no-exponent-plus\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\5.no-exponent-plus\output.json" />
-    <None Include="Resources\test\tokens\5.non-integer\6.no-exponent-leading-zeroes\expected.json" />
-    <None Include="Resources\test\tokens\5.non-integer\6.no-exponent-leading-zeroes\input.json" />
-    <None Include="Resources\test\tokens\5.non-integer\6.no-exponent-leading-zeroes\output.json" />
-    <None Include="Resources\test\tokens\6.string\1.no-unnecessary-escapes\expected.json" />
-    <None Include="Resources\test\tokens\6.string\1.no-unnecessary-escapes\input.json" />
-    <None Include="Resources\test\tokens\6.string\1.no-unnecessary-escapes\output.json" />
-    <None Include="Resources\test\tokens\6.string\2.no-combining-escapes\expected.json" />
-    <None Include="Resources\test\tokens\6.string\2.no-combining-escapes\input.json" />
-    <None Include="Resources\test\tokens\6.string\2.no-combining-escapes\output.json" />
-    <None Include="Resources\test\tokens\6.string\3.short-escapes\expected.json" />
-    <None Include="Resources\test\tokens\6.string\3.short-escapes\input.json" />
-    <None Include="Resources\test\tokens\6.string\3.short-escapes\output.json" />
-    <None Include="Resources\test\tokens\6.string\4.other-control-escapes\expected.json" />
-    <None Include="Resources\test\tokens\6.string\4.other-control-escapes\input.json" />
-    <None Include="Resources\test\tokens\6.string\4.other-control-escapes\output.json" />
-    <None Include="Resources\test\tokens\6.string\5.lone-surrogate-escapes\expected.json" />
-    <None Include="Resources\test\tokens\6.string\5.lone-surrogate-escapes\input.json" />
-    <None Include="Resources\test\tokens\6.string\5.lone-surrogate-escapes\output.json" />
-    <None Include="Resources\test\tokens\7.surrogates\expected.json" />
-    <None Include="Resources\test\tokens\7.surrogates\input.json" />
-    <None Include="Resources\test\tokens\7.surrogates\output.json" />
-    <None Include="Resources\test\whitespace\array\expected.json" />
-    <None Include="Resources\test\whitespace\array\input.json" />
-    <None Include="Resources\test\whitespace\array\output.json" />
-    <None Include="Resources\test\whitespace\false\expected.json" />
-    <None Include="Resources\test\whitespace\false\input.json" />
-    <None Include="Resources\test\whitespace\false\output.json" />
-    <None Include="Resources\test\whitespace\null\expected.json" />
-    <None Include="Resources\test\whitespace\null\input.json" />
-    <None Include="Resources\test\whitespace\null\output.json" />
-    <None Include="Resources\test\whitespace\number\expected.json" />
-    <None Include="Resources\test\whitespace\number\input.json" />
-    <None Include="Resources\test\whitespace\number\output.json" />
-    <None Include="Resources\test\whitespace\object\expected.json" />
-    <None Include="Resources\test\whitespace\object\input.json" />
-    <None Include="Resources\test\whitespace\object\output.json" />
-    <None Include="Resources\test\whitespace\string\expected.json" />
-    <None Include="Resources\test\whitespace\string\input.json" />
-    <None Include="Resources\test\whitespace\string\output.json" />
-    <None Include="Resources\test\whitespace\true\expected.json" />
-    <None Include="Resources\test\whitespace\true\input.json" />
-    <None Include="Resources\test\whitespace\true\output.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CanonicalJson\CanonicalJson.csproj">
-      <Project>{f2ec8a3f-a4ef-4675-985d-8da3ef0d141b}</Project>
-      <Name>CanonicalJson</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="IKVM">
-      <Version>8.1.5717</Version>
-    </PackageReference>
-    <PackageReference Include="IKVM.OpenJDK.Core">
-      <Version>7.2.4630.5</Version>
-    </PackageReference>
-    <PackageReference Include="IKVM.Runtime">
-      <Version>7.2.4630.5</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestAdapter">
-      <Version>1.1.11</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestFramework">
-      <Version>1.1.11</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

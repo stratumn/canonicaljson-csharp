@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Stratumn.CanonicalJson</id>
-    <version>0.0.7.0</version>
+    <version>0.0.8.0</version>
     <title>CanonicalJSON</title>
     <authors>Stratumn</authors>
     <owners>Stratumn</owners>
@@ -10,9 +10,9 @@
     <projectUrl>https://github.com/stratumn/canonicaljson-csharp</projectUrl>
     <iconUrl>https://avatars2.githubusercontent.com/u/15095987</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>C# library fror producing JSON in canonical format.</description>
+    <description>C# library for producing JSON in canonical format</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2019</copyright>
+    <copyright>Copyright 2020</copyright>
     <tags>Canonicaljson</tags>
   </metadata>
 </package>

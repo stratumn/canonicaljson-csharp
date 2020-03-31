@@ -1,18 +1,15 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using java.math;
-using System.Globalization;
-using java.text;
-using Stratumn.CanonicalJson.Helpers;
-using Stratumn.CanonicalJson.helpers;
+using Deveel.Math;
 using Newtonsoft.Json;
-using java.util;
+
+using Stratumn.CanonicalJson.Helpers;
 
 namespace Stratumn.CanonicalJson
 {
@@ -24,7 +21,7 @@ namespace Stratumn.CanonicalJson
     public class Transformer
     {
 
-        private java.lang.StringBuilder buffer;
+        private StringBuilder buffer;
         /* Regular expressions that matches characters otherwise inexpressible in 
           JSON (U+0022 QUOTATION MARK, U+005C REVERSE SOLIDUS, 
          and ASCII control characters U+0000 through U+001F) or UTF-8 (U+D800 through U+DFFF) */
@@ -32,14 +29,14 @@ namespace Stratumn.CanonicalJson
 
         public string Transform(Object obj)
         {
-            buffer = new java.lang.StringBuilder();
+            buffer = new StringBuilder();
             Serialize(obj);
             return buffer.ToString();
         }
 
         private void Escape(char c)
         {
-            buffer.append(Constants.C_BACK_SLASH).append(c);
+            buffer.Append(Constants.C_BACK_SLASH).Append(c);
         }
 
         /***
@@ -60,10 +57,10 @@ namespace Stratumn.CanonicalJson
           */
         private void SerializeString(string value)
         {
-            buffer.append(Constants.C_DOUBLE_QUOTE);
+            buffer.Append(Constants.C_DOUBLE_QUOTE);
             if (FORBIDDEN.Matches(value).Count == 0)
             {
-                buffer.append(value);
+                buffer.Append(value);
             }
             else
             {
@@ -74,12 +71,15 @@ namespace Stratumn.CanonicalJson
                     {
                         if (FORBIDDEN.Matches(Convert.ToString(c)).Count == 0)
                         {
-                            buffer.append(c);
+                            buffer.Append(c);
                             continue;
                         }
-                        if (java.lang.Character.isSurrogate(chars[i]) && chars.Length > i + 1 && java.lang.Character.isSurrogatePair(chars[i], chars[i + 1]))
+
+                        // The "high surrogate" is the leading character defining the surrogate pair,
+                        // the "low surrogate" is the trailing character.
+                        if (Char.IsHighSurrogate(chars[i]) && chars.Length > i + 1 && Char.IsSurrogatePair(chars[i], chars[i + 1]))
                         {
-                            buffer.appendCodePoint(CharHelper.ToCodePoint(chars[i], chars[++i]));
+                            buffer.Append(Char.ConvertFromUtf32(CharHelper.ToCodePoint(chars[i], chars[++i])));
                             continue;
                         }
                         switch (c)
@@ -112,14 +112,14 @@ namespace Stratumn.CanonicalJson
 
                                 Escape('u');
                                 string hex = string.Format("{0:x4}", (int)c).ToUpper();
-                                buffer.append(hex);
+                                buffer.Append(hex);
                                 break;
 
                         }
                     }
                 }
             }
-            buffer.append(Constants.C_DOUBLE_QUOTE);
+            buffer.Append(Constants.C_DOUBLE_QUOTE);
         }
 
         /***
@@ -141,24 +141,63 @@ namespace Stratumn.CanonicalJson
 
         private void SerializeNumber(string value)
         {
+            var bd = BigDecimal.Parse(value);
 
-            BigDecimal bd = new BigDecimal(value);
-            try
-            {  //attempt converting to fixed number
-                buffer.append(bd.toBigIntegerExact().toString());
-
-            }
-            catch (java.lang.ArithmeticException)
+            // Check for integers -> whole format
+            // bd is whole if its scale is less or equal to 0
+            BigInteger bdUnscaled = bd.UnscaledValue;
+            int bdScale = bd.Scale;
+            // Try to normalize scale to 0
+            if (bdScale != 0)
             {
-                NumberFormat f = NumberFormat.getInstance(Locale.ENGLISH);
-                DecimalFormat formatter = (DecimalFormat)f;
+                while (bdUnscaled % 10 == 0 && bdScale > 0)
+                {
+                    bdUnscaled /= 10;
+                    bdScale--;
+                }
+                while (bdScale < 0)
+                {
+                    bdUnscaled *= 10;
+                    bdScale++;
+                }
+            }
 
-                formatter.applyPattern("0.0E0");
-                formatter.setMinimumFractionDigits(1);
-                formatter.setMaximumFractionDigits(bd.precision());
-                string val = formatter.format(bd).Replace("+", "");
-
-                buffer.append(val);
+            if (bdScale == 0)
+            {
+                // This is a System.Numerics.BigInteger:
+                // we need it because Deveel.Math.BigInteger.ToString
+                // and Deveel.Math.BigDecimal.ToString have unwanted behavior
+                // that force exponential notation or adds ".0" to the integer
+                var sysWhole = System.Numerics.BigInteger.Parse(bdUnscaled.ToString());
+                buffer.Append(sysWhole.ToString("D"));
+            }
+            else
+            // Decimals -> force exponential notation,
+            // with the value before the exponential normalized to < 10
+            {
+                // For example, 3.14 will be represented by:
+                // unscaled = 314 and scale = 2
+                BigInteger unscaled = bd.UnscaledValue;
+                int exponent = -bd.Scale;
+                // unscaled should not be a multiple of 10
+                while (unscaled % 10 == 0)
+                {
+                    unscaled /= 10;
+                    exponent++;
+                }
+                string unscaledString = unscaled.ToString();
+                // Dividing the unscaled integer to only have one leading digit
+                // (which is equivalent to 10 to the amount of digits - 1, and the sign taken into account
+                // since we're operating with strings)
+                exponent += unscaledString.Length - (bd.Sign < 0 ? 2 : 1);
+                int decimalIndex = bd.Sign < 0 ? 2 : 1;
+                string wholeString = unscaledString.Substring(0, decimalIndex);
+                string decimalString = unscaledString.Substring(decimalIndex);
+                if (decimalString == "")
+                {
+                    decimalString = "0";
+                }
+                buffer.Append(wholeString + "." + decimalString + "E" + exponent);
             }
 
         }
@@ -167,46 +206,46 @@ namespace Stratumn.CanonicalJson
         {
             if (o == null)
             {
-                buffer.append("null");
+                buffer.Append("null");
             }
             else if (o is IDictionary<string, Object>)
             {
                 SortedDictionary<String, Object> sortedTree = new SortedDictionary<String, Object>(new LexComparator());
                 var tree = (IDictionary<string, Object>)o;
                 tree.ToList().ForEach(t => sortedTree.Add(t.Key, t.Value));
-                buffer.append('{');
+                buffer.Append('{');
                 bool next = false;
                 foreach (KeyValuePair<string, object> keyValue in sortedTree.SetOfKeyValuePairs())
                 {
                     if (next)
                     {
-                        buffer.append(',');
+                        buffer.Append(',');
                     }
                     next = true;
                     SerializeString(keyValue.Key);
-                    buffer.append(':');
+                    buffer.Append(':');
                     Debug.WriteLine(keyValue.Value);
                     Serialize(keyValue.Value);
                 }
-                buffer.append('}');
+                buffer.Append('}');
             }
             else
               if (o is List<Object>)
             {
 
-                buffer.append('[');
+                buffer.Append('[');
                 bool next = false;
 
                 foreach (Object value in (List<Object>)o)
                 {
                     if (next)
                     {
-                        buffer.append(',');
+                        buffer.Append(',');
                     }
                     next = true;
                     Serialize(value);
                 }
-                buffer.append(']');
+                buffer.Append(']');
             }
             else if (o is string)
             {
@@ -214,7 +253,7 @@ namespace Stratumn.CanonicalJson
             }
             else if (o is bool?)
             {
-                buffer.append(((bool?)o).ToString().ToLower());
+                buffer.Append(((bool?)o).ToString().ToLower());
             }
             else if (o is double? || o is decimal || o is int? || o is BigDecimal)
             {
@@ -230,7 +269,7 @@ namespace Stratumn.CanonicalJson
                     //parse and searialize it to make sure its canonicalized.
                     Serialize(new Parser(json).Parse());
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw new ApplicationException("Unknown object: " + o);
                 }
