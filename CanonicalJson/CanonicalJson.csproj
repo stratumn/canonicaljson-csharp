@@ -2,30 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F2EC8A3F-A4EF-4675-985D-8DA3EF0D141B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Stratumn.CanonicalJson</RootNamespace>
-    <AssemblyName>Stratumn.CanonicalJson</AssemblyName>
-
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
     <PackageId>Stratumn.CanonicalJson</PackageId>
-    <PackageVersion>0.0.2.0</PackageVersion>
+    <Title>Stratumn CanonicalJson</Title>
+    <Description>C# library for producing JSON in canonical format</Description>
+    <Version>0.0.8.0</Version>
     <Authors>Stratumn</Authors>
+    <Company>Stratumn</Company>
     <PackageIconUrl>https://avatars2.githubusercontent.com/u/15095987</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/stratumn/canonicaljson-csharp/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/stratumn/canonicaljson-csharp</PackageProjectUrl>
-    <PackageTags>Stratumn CanonicalJson</PackageTags>
-    <Description>C# library for producing JSON in canonical format</Description>
+    <RepositoryUrl>https://github.com/stratumn/canonicaljson-csharp</RepositoryUrl>
+    <PackageTags>json;canonical</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="CanonicalJson.nuspec" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dmath.core" Version="1.7.0" />

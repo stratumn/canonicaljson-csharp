@@ -34,3 +34,12 @@ git submodule update
 dotnet test CanonicalTest/CanonicalJsonTest.csproj
 ```
 
+## Publishing to NuGet
+
+From [this source](https://docs.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli):
+```sh
+# Create the .nupkg package
+dotnet pack --configuration release
+# Publish it
+dotnet nuget push CanonicalJson/bin/Release/Stratumn.CanonicalJson.<version>.nupkg -k <nuget_api_key> -s https://api.nuget.org/v3/index.json
+```
