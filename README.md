@@ -1,5 +1,7 @@
 # .NET CanonicalJson
 
+[![NuGet](https://img.shields.io/nuget/v/Stratumn.CanonicalJson)](https://www.nuget.org/packages/Stratumn.CanonicalJson/)
+
 .Net library for producing JSON in canonical format as specified by [https://gibson042.github.io/canonicaljson-spec/](https://gibson042.github.io/canonicaljson-spec/). The provided interface matches that of native JSON object.
 
 ## Installation
