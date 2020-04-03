@@ -1,13 +1,11 @@
-﻿
-using java.math;
-using Stratumn.CanonicalJson.helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Deveel.Math;
+
+using Stratumn.CanonicalJson.Helpers;
 
 namespace Stratumn.CanonicalJson
 {
@@ -189,7 +187,7 @@ namespace Stratumn.CanonicalJson
                 {
                     throw new IOException("Bad number: leading zero: " + token);
                 }
-                return new BigDecimal(token);
+                return BigDecimal.Parse(token);
             }
             else if (BOOLEAN_PATTERN.IsMatch(token))
             {

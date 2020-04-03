@@ -1,10 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Stratumn.CanonicalJson.helpers
+namespace Stratumn.CanonicalJson.Helpers
 {
     /***
     * Compares strings lexicographically

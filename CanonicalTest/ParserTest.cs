@@ -1,79 +1,56 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Stratumn.CanonicalJson;
+using System;
 using System.Collections.Generic;
-using java.math;
+using Stratumn.CanonicalJson;
+using Xunit;
+using Deveel.Math;
 
 namespace Stratumn.CanonicalJsonTest
 {
     /// <summary>
     ///  @copyright Stratumn
     /// </summary>
-    [TestClass]
     public class ParserTest
     {
-
-        [TestMethod]
-        public void TestSanity()
+        [Theory]
+        [InlineData("{\"a\":\"b\"}", "a", "b")]
+        [InlineData("{\"string\": \"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\\/\"}", "string", "\u20ac$\u000F\u000aA'\u0042\u0022\u005c\\\"/")]
+        public void TestSanity(string str, string key, string value)
         {
-
-            new Parser("{\"a\":\"b\"}").Parse();
-            new Parser("{\"string\": \"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\\/\"}").Parse();
+            var res = (SortedDictionary<string, object>) new Parser(str).Parse();
+            // There should only be one key/value pair and it should match the provided key and value
+            Assert.Collection(res, kvp => {
+                Assert.Equal(key, kvp.Key);
+                Assert.Equal(value, kvp.Value);
+            });
+        }
+        public static IEnumerable<object[]> GetData()
+        {
+            yield return new object[] {"false", false, "Boolean false"};
+            yield return new object[] {"true", true, "Boolean true"};
+            yield return new object[] {"null", null, "Null"};
+            yield return new object[] {"100E+100", BigDecimal.Parse("100e100"), "Big integers"};
+            yield return new object[] {"-1", new BigDecimal(-1), "Negative integers"};
+            yield return new object[] {"1.21e1", BigDecimal.Parse("12.1"), "Decimals"};
+            yield return new object[] {"\"\\ufb01\"", "ﬁ", "Unicode codepoint literals"};
+            yield return new object[] {"\"\\b\"", "\b", "Escapes"};
+            yield return new object[] {"[]", new List<Object>(), "Empty arrays"};
+            yield return new object[] {"[\"a\", 1, true]", new List<Object>(new List<Object>(new Object[] {"a", new BigDecimal(1), true})), "Arbitrary arrays"};
         }
 
-
-        List<Datum> valid = new List<Datum>() {
-
-                    new    Datum("false",false,"false")
-                          ,new Datum("null",null,"null")
-                          ,new Datum("true",true,"true")
-                          ,new Datum("100E+100",new BigDecimal("100e100"),"big integers")
-                          ,new Datum("-1",new BigDecimal(-1),"negative integers")
-                          ,new Datum("1.21e1",new BigDecimal("12.1"),"decimal numbers")
-                          ,new Datum("\"\\ufb01\"","ﬁ","unicode encoded characters")
-                          ,new Datum("\"\\b\"","\b","short escaped characters")
-                          ,new Datum("[]",new List<Object>(),"empty arrays")
-                          ,new Datum("[\"a\", 1, true]",new List<Object>(new List<Object>(new Object[] {"a", new BigDecimal(1), true})),"arrays")
-                    };
-
-
-        [TestMethod]
-        public void TestValid()
+        [Theory]
+        [MemberData(nameof(GetData))]
+        public void TestValid(string input, object expected, string description)
         {
-            foreach (Datum dt in valid)
+            Object result;
+            result = new Parser(input).Parse();
+            if (expected == null)
             {
-                Object result;
-
-                result = new Parser(dt.Input).Parse();
-                Assert.AreEqual(dt.Output == null ? "NULL" : dt.Output.ToString(), result == null ? "NULL" : result.ToString());
-
-
+                Assert.True(result == null, description);
             }
-        }
-
-
-
-        class Datum
-        {
-
-            public string Input { get; set; }
-            public Object Output { get; set; }
-            public string description { get; set; }
-            public Datum(String input, Object output, String description)
+            else
             {
-                this.Input = input;
-                this.Output = output;
-                this.description = description;
+                Assert.True(expected.ToString() == result.ToString(), description);
             }
-
-
-            public override string ToString()
-            {
-                return "Datum [input=" + Input + ", output=" + Output + ", description=" + description + "]";
-            }
-
-
-
         }
     }
 }
